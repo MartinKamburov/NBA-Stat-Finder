@@ -1,0 +1,1 @@
+This is a React and Java Spring Boot full-stack application which is able to search up the statistics of any current NBA Player for the season of 2024-2025.
