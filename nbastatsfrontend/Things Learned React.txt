@@ -1,0 +1,1 @@
+Always git pull before doing anything to make sure that the current changes are added within the project.

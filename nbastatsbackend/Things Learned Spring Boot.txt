@@ -1,0 +1,62 @@
+When connecting to a PostgreSQL database you must do the following:
+    - Add the right dependency if it wasn't already added from the Spring Initialzr
+    - Add the application.properties (under src/main/resources/)
+    - Make an entity java class to hold the information in this case we made a player package and a Player.java class. Basically you are defining the table mapping.
+    - Define a Spring Data repository (This handles persistence save/load/delete).
+        - We do this because this is how Spring Data JPA gives you a complete, ready-to-use data-access layer with almost zero boilerplate.
+          You can perform CRUD updates, you get access to multiple methods that help.
+
+Spring MVC?
+    - A framework for building web apps
+    - Handles HTTP requests
+    - Generates web pages
+    - returns data to clients
+
+MVC (Model View Controller)
+    - A popular design pattern for organizing code
+    - Model:
+        - Handles the data + logic
+    - View:
+        - What the user sees
+    - Controller:
+        - Middleman
+
+In this project when a request for data is sent the following happens:
+    [ HTTP Request ]
+           ↓
+      PlayerController      ← handles URL & request params
+           ↓
+      PlayerService         ← business logic, transactions, caching…
+           ↓
+      PlayerRepo            ← CRUD / queries via Spring Data JPA
+           ↓
+    [ PostgreSQL Database ]
+
+Every JPA entity must have at least one @Id field so Hibernate knows how to uniquely identify each row
+
+Adding columns in SQL dealing with types:
+    - String (java) --> character varying (pgadmin) or text (pgadmin)
+    - Integer (java) --> integer (pgadmin)
+    - Float (java) --> real (pgadmin)
+    - Double (java) --> double precision (pgadmin)
+    - LocalDate (java) --> date (pgadmin)
+
+Since I have a composite key which means that there are two primary keys in my database that means that I need a IdClass
+    - Example: PRIMARY KEY (player, game_date)
+
+If you have one single primary key then you can drop the IdClass, but otherwise you have to keep the IdClass
+
+Basically since there are two primary keys, since the database has the players name and date listed multiple times we would have the two primary keys
+
+A basic setup for a typical java spring boot application is:
+    - The package entity in this case player, the package would usually have:
+        - A Player.java model class, this is the bean
+        - A PlayerService.java class that handles all the business logic
+        - A PlayerController.java class that is the http layer which handles all the requests coming in
+        - A PlayerRepo.java class which allows us to interact and query the database. It is an interface. (Can also call PlayerDAO.java (DAO = Data access object))
+        - A PlayerConfig.java file that handles all the configuration (In this case we don't have one)
+        - We also have a PlayerStatsId class made since we have two primary keys
+
+This project structure is perfect if we want to scale our backend easily, we basically are making packages that are similar to player which all do different microservices and they do one thing.
+
+The project structure becomes a monolithic architecture meaning that an application is built as a single unified unit.
