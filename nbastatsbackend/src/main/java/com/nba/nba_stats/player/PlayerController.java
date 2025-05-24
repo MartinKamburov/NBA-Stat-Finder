@@ -23,7 +23,6 @@ public class PlayerController {
         return playerService.getPlayers();
     }
 
-
     /*
     ResponseEntity is used in this scenario because if we just returned a list of Player, by default Spring will send a 200 OK status even if the player is not found.
     But by using ResponseEntity if the player lookup fails then it will allow us to return a 404 Not Found error which is exactly what we want.

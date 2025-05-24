@@ -1,1 +1,8 @@
 Always git pull before doing anything to make sure that the current changes are added within the project.
+
+The src folder is where all of the main code is going to go. We can add different folders to better organize the project structure.
+    - Inside of each folder you can put a tests folder to test each folder.
+
+rafce is used to make the skeleton for a component.
+
+To connect the frontend to the backend add the following in package.json: "proxy": "http://localhost:8080"
