@@ -1,72 +1,82 @@
-//The useState hook in react allows functional components to manage state. It provides a way to declare state variables that can hold various data types. 
-// By using the update function in the two element array of a useState the update function will trigger a re-render of the component.
-import { useState } from "react"; 
-import { Button, InputGroup, Form } from 'react-bootstrap';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate }               from "react-router-dom";
+import { Button, InputGroup, Form, Spinner } from "react-bootstrap";
+import SearchBarUnderlay             from "./SearchBarUnderlay";
 
-const SearchBar = () => {
-    const [query, setQuery] = useState("");      // the search input
-    const [players, setPlayers] = useState([]);  // array of results
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null); 
+export default function SearchBar() {
+  const [query,        setQuery]        = useState("");
+  const [matches,      setMatches]      = useState([]);
+  const [loading,      setLoading]      = useState(false);
+  const [selectedName, setSelectedName] = useState(null);
+  const navigate                         = useNavigate();
+  const inputRef                         = useRef(null);
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        if (!query) return;
+  // fetch up to 5 suggestions whenever `query` changes
+  useEffect(() => {
+    if (!query) {
+      setMatches([]);
+      return;
+    }
+    setLoading(true);
+    fetch(`/api/player/search/${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(names => setMatches(names.slice(0, 5)))
+      .catch(() => setMatches([]))
+      .finally(() => setLoading(false));
+  }, [query]);
 
-        setLoading(true);
-        setError(null);
+  // clicking a suggestion
+  const handleSelectName = name => {
+    setQuery(name);
+    setSelectedName(name);
+    setMatches([]);              // hide dropdown
+    inputRef.current?.focus();   // keep focus for "Enter"
+  };
 
-        try {
-        const res = await fetch(`/api/player/${encodeURIComponent(query)}`);
-        if (!res.ok) throw new Error(`Server returned ${res.status}`);
-        const player = await res.json();
-        console.log(player);
-        setPlayers(player);
-        } catch (err) {
-        setError(err.message);
-        } finally {
-        setLoading(false);
-        }
-    };
+  // typing in the box clears any prior “selection”
+  const handleChange = e => {
+    setQuery(e.target.value);
+    setSelectedName(null);
+  };
 
-    return (
-        <div className="App" style={{ padding: 20, fontFamily: "sans-serif" }}>
-            <Form onSubmit={handleSearch}>
-                <InputGroup className="mb-3">
-                <Form.Control
-                    placeholder="Enter player name"
-                    value={query}
-                    onChange={e => setQuery(e.target.value)}
-                />
-                <Button
-                    variant="outline-primary"
-                    type="submit" 
-                    disabled={loading}
-                >
-                    Search
-                </Button>
-                </InputGroup>
-            </Form>
+  // only let them search if they have actually picked a valid full name
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (selectedName !== query) {
+      // you could show an error toast here instead
+      return;
+    }
+    navigate(`/player/${encodeURIComponent(query)}`);
+    setQuery("");
+    setSelectedName(null);
+  };
 
-            {loading && <p>Loading…</p>}
-            {error && <p style={{ color: "red" }}> Player not found. Please check your spelling. </p>}
+  return (
+    <div style={{ position: "relative", maxWidth: 400 }}>
+      <Form onSubmit={handleSubmit} autoComplete="off">
+        <InputGroup>
+          <Form.Control
+            ref={inputRef}
+            placeholder="Enter player name"
+            value={query}
+            onChange={handleChange}
+          />
+          <Button
+            type="submit"
+            disabled={loading || selectedName !== query}
+          >
+            {loading
+              ? <Spinner animation="border" size="sm" />
+              : "Search"}
+          </Button>
+        </InputGroup>
+      </Form>
 
-            {/* {!loading && !error && players.length === 0 && (
-                <p>No players found. Try a different name.</p>
-            )} */}
-
-            <ul>
-                {players.map(player => (
-                    <li
-                    key={`${player.name}-${player.game_date}`}  // use a unique combo
-                    style={{ marginBottom: 10 }}
-                    >
-                        <strong>{player.name}</strong> — Team: {player.team}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
+      <SearchBarUnderlay
+        prefix={query}
+        matches={matches}
+        onSelect={handleSelectName}
+      />
+    </div>
+  );
 }
-
-export default SearchBar

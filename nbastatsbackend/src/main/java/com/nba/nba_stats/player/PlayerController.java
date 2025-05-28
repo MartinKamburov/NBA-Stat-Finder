@@ -37,5 +37,12 @@ public class PlayerController {
         return ResponseEntity.ok(games);
     }
 
+    @GetMapping("/search/{prefix}")
+    public ResponseEntity<List<String>> searchNames(@PathVariable String prefix) {
+        List<String> names = playerService.findNamesStartingWith(prefix);
+        return ResponseEntity.ok(names);
+    }
+
+
 
 }

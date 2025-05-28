@@ -6,3 +6,12 @@ The src folder is where all of the main code is going to go. We can add differen
 rafce is used to make the skeleton for a component.
 
 To connect the frontend to the backend add the following in package.json: "proxy": "http://localhost:8080"
+
+React Hooks are functions that let developers "hook into" React state and lifecycle features from within functional components. Some React hooks are:
+    - useState: Enables functional components to manage state
+    - useEffect: Handles side effects like data fetching, DOM manipulation, and subscriptions, acting as a combination of componentDidMount, componentDidUpdate, and componentWillUnmount
+    - useContext: Allows functional components to access context values, simplifying the process of sharing data between components without prop drilling
+    - Other common ones are:
+        - useCallback
+        - useRef
+

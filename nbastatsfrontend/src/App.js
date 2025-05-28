@@ -1,13 +1,24 @@
-import SearchBar from "./components/SearchBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./index.css"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout       from "./components/Layout";
+import PlayerPage   from "./pages/PlayerPage";
+import Hero from './components/Hero';
 
 function App() {
-  return (
-    <>
-      <h1>Welcome page</h1>
-      <SearchBar/>
 
-    </>
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* this route renders Layout */}
+        <Route path="/" element={<Layout />}>
+          {/* these are “child” routes that render into <Outlet/> */}
+          <Route index      element={<Hero />} />
+          <Route path="player/:name" element={<PlayerPage />} />
+          {/* add more pages here */}
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -25,4 +25,13 @@ public class PlayerService {
         return playerRepo.findAllByName(name);
     }
 
+    public List<String> findNamesStartingWith(String prefix) {
+        return playerRepo
+                .findByNameStartingWithIgnoreCase(prefix)
+                .stream()
+                .map(Player::getName)
+                .distinct()
+                .toList();
+    }
+
 }
