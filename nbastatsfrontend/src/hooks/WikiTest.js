@@ -1,15 +1,21 @@
-import useWikiBio from "../hooks/useWikiBio";
-import { Spinner } from "react-bootstrap";
+import useWikiBio from "./useWikiBio";
+import { useEffect } from "react";
 
-export default function PlayerDetails({ name }) {
-  // coerce null/undefined → empty object
+export default function WikiTest({ name }) {
+  // hard–code a name you know exists
   console.log("Here is the player we are searching for in wikipedia, ", name);
   const { info, loading, error } = useWikiBio(name);
 
+  useEffect(() => {
+    console.log("loading:", loading);
+    console.log("error:", error);
+    console.log("info:", info);
+  }, [loading, error, info]);
+
   return (
     <div>
-      <h2>Biography</h2>
-      {loading && <Spinner />}
+      <h2>WikiTest</h2>
+      {loading && <p>Loading…</p>}
       {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
       {info && (
         <div style={{ textAlign: "left" }}>
