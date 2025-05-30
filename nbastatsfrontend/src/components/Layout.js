@@ -26,7 +26,7 @@ export default function Layout() {
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="">Link</Nav.Link>
+                <Nav.Link href="https://www.nba.com" target="_blank" rel="noopener noreferrer">More info</Nav.Link>
                 {/* <NavDropdown
                   title="Dropdown"
                   id={`offcanvasNavbarDropdown-expand-${expand}`}

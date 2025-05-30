@@ -31,10 +31,10 @@ const Hero = ({ onClick }) => (
       </div>
 
       <h1 className="text-4xl font-extrabold text-center mb-4">
-        Search up any current NBA players statistics!
+        For more NBA news click on the logo!
       </h1>
       <p className="text-center text-base text-gray-700">
-        These statistics are for the 2024–2025 NBA season.
+        The statistics on this website are for the 2024–2025 NBA season.
       </p>
     </div>
   </div>
