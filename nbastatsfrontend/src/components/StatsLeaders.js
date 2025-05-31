@@ -13,8 +13,8 @@ export default function StatsLeaders() {
   const [leaders, setLeaders] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // ① absolute URL avoids the old “double slash” bug
-  const API = import.meta.env.VITE_API_URL ?? process.env.REACT_APP_API_URL;
+  // absolute URL avoids the old “double slash” bug
+  const API = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     fetch(`${API}/api/player`)                            // e.g. https://my-backend.onrender.com/api/player
