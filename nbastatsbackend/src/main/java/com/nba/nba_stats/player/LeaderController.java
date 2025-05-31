@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")          // -> final URL: /api/leaders/{stat}
+@RequestMapping("/api/leaders")
 public class LeaderController {
 
     private final JdbcTemplate jdbcTemplate;
@@ -17,7 +17,7 @@ public class LeaderController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @GetMapping("/leaders/{stat}")
+    @GetMapping("/{stat}")
     public List<LeaderDTO> leaders(@PathVariable String stat) {
 
         String column = switch (stat) {
