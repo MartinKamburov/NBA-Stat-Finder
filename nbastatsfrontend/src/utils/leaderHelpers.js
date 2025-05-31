@@ -7,17 +7,17 @@ export const CATEGORY_META = {
   pts: {                       // points-per-game leaders
     title: "Points",
     suffix: "PPG",
-    endpoint: "/leaders/pts",
+    endpoint: "/api/leaders/pts",
   },
   ast: {                       // assists-per-game leaders
     title: "Assists",
     suffix: "APG",
-    endpoint: "/leaders/ast",
+    endpoint: "/api/leaders/ast",
   },
   trb: {                       // rebounds-per-game leaders
     title: "Rebounds",
     suffix: "RPG",
-    endpoint: "/leaders/trb",
+    endpoint: "/api/leaders/trb",
   },
 };
 

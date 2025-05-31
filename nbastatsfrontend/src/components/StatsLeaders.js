@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PlayerSnapshot     from './PlayerSnapshot';
-import { CATEGORY_META }  from '../utils/leaderHelpers';
+import {  }  from '../utils/leaderHelpers';
 
 const api = path =>
   fetch(`${process.env.REACT_APP_API_URL}${path}`).then(r => {
