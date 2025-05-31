@@ -1,90 +1,64 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { computeLeaders } from "../utils/leaderHelpers";
-import PlayerPicture from "./PlayerPicture";
+import getLeaders from "../utils/leaderHelpers";   
+import PlayerSnapshot from "./PlayerSnapshot";       
 
-const CATEGORIES = [
-  { key: "pts", label: "Top 5 Scorers",    suffix: " PPG" },
-  { key: "ast", label: "Top 5 Assist Leaders", suffix: " APG" },
-  { key: "trb", label: "Top 5 Rebounders", suffix: " RPG" },
+const CARDS = [
+  {
+    key: "ppg",
+    title: "Top 5 Scorers",
+    suffix: " PPG",
+  },
+  {
+    key: "apg",
+    title: "Top 5 Assist Leaders",
+    suffix: " APG",
+  },
+  {
+    key: "rpg",
+    title: "Top 5 Rebounders",
+    suffix: " RPG",
+  },
 ];
 
 export default function StatsLeaders() {
-  const [leaders, setLeaders] = useState({});
+  const [leaders, setLeaders] = useState({}); 
   const [loading, setLoading] = useState(true);
 
-  // absolute URL avoids the old “double slash” bug
-  const API = process.env.REACT_APP_API_URL;
-
   useEffect(() => {
-    fetch(`${API}/api/player`)                            // e.g. https://my-backend.onrender.com/api/player
-      .then((r) => r.json())
-      .then((rows) => {
-        const next = {};
-        CATEGORIES.forEach((c) => {
-          next[c.key] = computeLeaders(rows, c.key, 5, "avg"); // per-game average
-        });
-        setLeaders(next);
-      })
+    getLeaders()
+      .then((data) => setLeaders(data))
       .finally(() => setLoading(false));
-  }, [API]);
+  }, []);
 
   if (loading) {
-    return (
-      <div className="text-center py-5">
-        <span className="spinner-border" role="status" />
-      </div>
-    );
+    return <div className="text-center my-5">Loading leaders…</div>;
   }
 
   return (
-    <section className="container py-4">
-      <div className="row g-4">
-        {CATEGORIES.map((c) => (
-          <div key={c.key} className="col-12 col-md-4">
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h5 className="card-title fw-bold text-center mb-3">
-                  {c.label}
-                </h5>
+    <div className="d-flex flex-column flex-md-row gap-4 mb-5 px-3">
+      {CARDS.map((card) => (
+        <div
+          key={card.key}
+          className="flex-fill border rounded-3 p-3 shadow-sm"
+          style={{ minWidth: "240px", maxWidth: "400px" }}
+        >
+          <h5 className="fw-bold text-center mb-3">{card.title}</h5>
 
-                <ul className="list-group list-group-flush small">
-                  {leaders[c.key].map((p, idx) => (
-                    <li
-                      key={p.player}
-                      className="list-group-item d-flex justify-content-between align-items-center gap-2"
-                    >
-                      {/* tiny head-shot */}
-                      <PlayerPicture
-                        playerName={p.player}
-                        size={32}              /* you added this prop earlier */
-                      />
-
-                      {/* rank + name */}
-                      <span className="flex-grow-1">
-                        {idx + 1}.{" "}
-                        <Link
-                          to={`/player/${encodeURIComponent(p.player)}`}
-                          className="link-underline link-underline-opacity-0"
-                        >
-                          {p.player}
-                        </Link>{" "}
-                        <small className="text-muted">({p.team})</small>
-                      </span>
-
-                      {/* stat value */}
-                      <span className="fw-semibold text-nowrap">
-                        {p.value}
-                        {c.suffix}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+          {/* List of the five rows –- uses the tiny component */}
+          <ul className="list-unstyled">
+            {leaders[card.key]?.map((p, idx) => (
+              <PlayerSnapshot
+                key={p.player}
+                rank={idx + 1}
+                player={p.player}
+                team={p.team}
+                value={p.value}
+                suffix={card.suffix}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }
