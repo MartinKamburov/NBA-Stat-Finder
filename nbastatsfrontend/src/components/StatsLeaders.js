@@ -18,7 +18,7 @@ export default function StatsLeaders() {
     async function load() {
       try {
         // 1) grab every game row for the season
-        const res  = await fetch("/api/player");        // adapt if your endpoint differs
+        const res  = await fetch(`${process.env.REACT_APP_API_URL}/api/player`);        // adapt if your endpoint differs
         if (!res.ok) throw new Error(`API ${res.status}`);
         const rows = await res.json();
 
