@@ -1,71 +1,58 @@
-import { useEffect, useState } from "react";
-import { computeLeaders } from "../utils/leaderHelpers"; 
-import PlayerSnapshot from "./PlayerSnapshot";
+import { useEffect, useState } from 'react';
+import PlayerSnapshot     from './PlayerSnapshot';
+import { CATEGORY_META }  from '../utils/leaderHelpers';
 
-/** configuration for the three cards we want to display */
-const CARDS = [
-  { key: "ppg", title: "Top 5 Scorers",        suffix: " PPG" },
-  { key: "apg", title: "Top 5 Assist Leaders", suffix: " APG" },
-  { key: "rpg", title: "Top 5 Rebounders",     suffix: " RPG" },
-];
+const api = path =>
+  fetch(`${process.env.REACT_APP_API_URL}${path}`).then(r => {
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return r.json();
+  });
 
-export default function StatsLeaders() {
-  const [leaders, setLeaders] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
+function CategoryCard({ cat }) {
+  const { title, suffix, endpoint } = CATEGORY_META[cat];
+  const [rows, setRows]   = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function load() {
-      try {
-        // 1) grab every game row for the season
-        const res  = await fetch(`${process.env.REACT_APP_API_URL}/api/player`);        // adapt if your endpoint differs
-        if (!res.ok) throw new Error(`API ${res.status}`);
-        const rows = await res.json();
-
-        // 2) crunch the numbers into three top-5 lists
-        setLeaders({
-          ppg: computeLeaders(rows, "pts"),   // points-per-game
-          apg: computeLeaders(rows, "ast"),   // assists-per-game
-          rpg: computeLeaders(rows, "trb"),   // rebounds-per-game
-        });
-      } catch (e) {
-        console.error(e);
-        setError(e.message ?? "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
-
-  if (loading) return <p className="text-center my-5">Loading leaders…</p>;
-  if (error)   return <p className="text-center text-danger my-5">⚠ {error}</p>;
+    api(endpoint).then(setRows).catch(setError);
+  }, [endpoint]);
 
   return (
-    <div className="d-flex flex-column flex-md-row gap-4 mb-5 px-3">
-      {CARDS.map(card => (
-        <div
-          key={card.key}
-          className="flex-fill border rounded-3 p-3 shadow-sm"
-          style={{ minWidth: 240, maxWidth: 400 }}
-        >
-          <h5 className="fw-bold text-center mb-3">{card.title}</h5>
+    <div className="col-md-4 mb-3">
+      <div className="border rounded p-3 h-100">
+        <h5 className="text-center fw-bold mb-3">{title}</h5>
 
-          {/* 5 tiny “avatar rows” */}
-          <ul className="list-unstyled m-0">
-            {(leaders[card.key] ?? []).map((p, i) => (
-              <PlayerSnapshot
-                key={p.player}
-                rank={i + 1}
-                player={p.player}
-                team={p.team}
-                value={p.value}
-                suffix={card.suffix}
-              />
-            ))}
-          </ul>
-        </div>
-      ))}
+        {error && (
+          <div className="text-danger small">⚠ {error.message}</div>
+        )}
+
+        {!error && rows.length === 0 && (
+          <div className="text-muted small">Loading…</div>
+        )}
+
+        {rows.map((r, i) => (
+          <PlayerSnapshot
+            key={r.player}
+            rank={i + 1}
+            player={r.player}
+            team={r.team}
+            value={r.value}
+            suffix={suffix}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function StatsLeaders() {
+  return (
+    <div className="container my-4">
+      <div className="row">
+        {Object.keys(CATEGORY_META).map(cat => (
+          <CategoryCard key={cat} cat={cat} />
+        ))}
+      </div>
     </div>
   );
 }
