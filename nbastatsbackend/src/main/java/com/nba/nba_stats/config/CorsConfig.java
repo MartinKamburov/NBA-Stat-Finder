@@ -1,6 +1,7 @@
 //This file is used to connect the frontend to the backend
 package com.nba.nba_stats.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,13 +9,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
                 // match your controller paths
                 .addMapping("/api/**")
                 // allow your React dev server
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins(frontendUrl)
                 // methods you need
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // if you need headers like Authorization

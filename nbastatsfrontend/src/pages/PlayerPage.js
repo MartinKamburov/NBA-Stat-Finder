@@ -8,9 +8,10 @@ export default function PlayerPage() {
     const playerName  = decodeURIComponent(name);
     const [stats, setStats] = useState([]);
     const [showSummary, setShowSummary] = useState(true);
+    const API = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
-        fetch(`/api/player/${encodeURIComponent(playerName)}`)
+        fetch(`${API}/api/player/${encodeURIComponent(playerName)}`)
         .then(r => r.json())
         .then(setStats)
         .catch(console.error);

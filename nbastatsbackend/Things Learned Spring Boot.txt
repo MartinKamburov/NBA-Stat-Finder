@@ -60,3 +60,6 @@ A basic setup for a typical java spring boot application is:
 This project structure is perfect if we want to scale our backend easily, we basically are making packages that are similar to player which all do different microservices and they do one thing.
 
 The project structure becomes a monolithic architecture meaning that an application is built as a single unified unit.
+
+postgres
+Semeistvo2002*

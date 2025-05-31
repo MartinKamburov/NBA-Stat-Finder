@@ -10,6 +10,7 @@ export default function SearchBar() {
   const [selectedName, setSelectedName] = useState(null);
   const navigate                         = useNavigate();
   const inputRef                         = useRef(null);
+  const API = process.env.REACT_APP_API_URL;
 
   // fetch up to 5 suggestions whenever `query` changes
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function SearchBar() {
       return;
     }
     setLoading(true);
-    fetch(`/api/player/search/${encodeURIComponent(query)}`)
+    fetch(`${API}/api/player/search/${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(names => setMatches(names.slice(0, 5)))
       .catch(() => setMatches([]))

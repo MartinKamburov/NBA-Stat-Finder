@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15          # or whatever version you like
+    restart: always
+    environment:
+      POSTGRES_DB: nbastats
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Semeistvo2002*
+    ports:
+      - "5432:5432"             # expose if you still want host access
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    image: nbastatsbackend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # point to the `db` service by name
+      SPRING_DATASOURCE_URL:    ${DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+    depends_on:
+      - db
+
+volumes:
+  db-data:
