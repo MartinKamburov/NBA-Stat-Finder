@@ -3,7 +3,7 @@ import "./index.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout       from "./components/Layout";
 import PlayerPage   from "./pages/PlayerPage";
-import Hero from './components/Hero';
+import Home from './pages/Home';
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
         {/* this route renders Layout */}
         <Route path="/" element={<Layout />}>
           {/* these are “child” routes that render into <Outlet/> */}
-          <Route index      element={<Hero />} />
+          <Route index      element={<Home />} />
           <Route path="player/:name" element={<PlayerPage />} />
           {/* add more pages here */}
         </Route>
