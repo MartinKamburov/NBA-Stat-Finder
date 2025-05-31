@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getLeaders from "../utils/leaderHelpers";   
+import computeLeaders from "../utils/leaderHelpers";   
 import PlayerSnapshot from "./PlayerSnapshot";       
 
 const CARDS = [
@@ -25,7 +25,7 @@ export default function StatsLeaders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getLeaders()
+    computeLeaders()
       .then((data) => setLeaders(data))
       .finally(() => setLoading(false));
   }, []);
