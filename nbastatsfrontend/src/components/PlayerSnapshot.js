@@ -16,8 +16,8 @@ export default function PlayerSnapshot({ rank, player, team, value, suffix }) {
         style={{ objectFit: 'cover' }}
       />
       <Link
-        to={`/api/player/${encodeURIComponent(player)}`}
-        className="flex-grow-1 small text-decoration-none"
+        to={`/player/${encodeURIComponent(player)}`}
+        className="flex-grow-1 small text-decoration-none text-dark"
       >
         {player} <span className="text-muted">({team})</span>
       </Link>
