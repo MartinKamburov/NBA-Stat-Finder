@@ -1,4 +1,5 @@
 import useWikiImage from '../hooks/useWikiImage';
+import { Link }           from 'react-router-dom';
 
 export default function PlayerSnapshot({ rank, player, team, value, suffix }) {
   const { url } = useWikiImage(player, 64);     // 64 px square
@@ -14,9 +15,12 @@ export default function PlayerSnapshot({ rank, player, team, value, suffix }) {
         className="rounded-circle border me-2"
         style={{ objectFit: 'cover' }}
       />
-      <div className="flex-grow-1 small">
+      <Link
+        to={`/api/player/${encodeURIComponent(player)}`}
+        className="flex-grow-1 small text-decoration-none"
+      >
         {player} <span className="text-muted">({team})</span>
-      </div>
+      </Link>
       <div className="fw-bold ms-1">{value.toFixed(1)} {suffix}</div>
     </div>
   );

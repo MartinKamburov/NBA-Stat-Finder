@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PlayerSnapshot     from './PlayerSnapshot';
 import { CATEGORY_META } from '../utils/leaderHelpers';
 
+
 const api = path =>
   fetch(`${process.env.REACT_APP_API_URL}${path}`).then(r => {
     if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
@@ -20,14 +21,14 @@ function CategoryCard({ cat }) {
   return (
     <div className="col-md-4 mb-3">
       <div className="border rounded p-3 h-100">
-        <h5 className="text-center fw-bold mb-3">{title}</h5>
+        <h5 className="text-center fw-bold mb-3">{title} Leaders</h5>
 
         {error && (
           <div className="text-danger small">⚠ {error.message}</div>
         )}
 
         {!error && rows.length === 0 && (
-          <div className="text-muted small">Loading…</div>
+          <div className="text-muted small"></div>
         )}
 
         {rows.map((r, i) => (
